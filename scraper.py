@@ -3,9 +3,9 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from selenium import webdriver
 
-browser = webdriver.ChromiumEdge()
-baseUrl = "https://www.bikedekho.com"
-brands = ["tvs", "bajaj", "royal-enfield", "yamaha", "honda", "hero", "suzuki", "ktm", "jawa-motorcycles", "harley-davidson", "ducati", "kawasaki", ]
+browser = webdriver.Safari()
+baseUrl = "https://www.bikewale.com"
+brands = ["tvs", "bajaj", "royalenfield", "yamaha", "honda", "hero", "suzuki", "ktm", "jawa", "harleydavidson", "ducati", "kawasaki", ]
 bikeData = []
 dataDict = {}
 
@@ -20,8 +20,6 @@ def createSoup(url):
 def saveToDict(dict, key, value):
     dict[key] = value
 
-
-
 # <----------Save to CSV Function---------->
 def saveToCSV(data):
     df = pd.DataFrame(data, columns=['brand', 'url'])
@@ -32,7 +30,8 @@ def getDetails(brands):
     for brand in brands:
         bikeListUrl = baseUrl + "/" + brand + "-bikes"
         soup = createSoup(bikeListUrl)
-        li = soup.select("ul.bikelist > li")
+
+        li = soup.select("ul > li.o-fzptUA")
         for link in li:
             bike = link.find('a')
             if (bike == None):
@@ -41,15 +40,12 @@ def getDetails(brands):
             for href1 in hrefList:
                 bikeLink = href1
             print(bikeLink)
-            # bikeData.append([brand, bikeLink])
+            bikeData.append([brand, bikeLink])
 
             ### Into single bike page ###
 
             singleBikePageURL = baseUrl + bikeLink
             soup = createSoup(singleBikePageURL)
-
-        # time.sleep(2)
-    print("Brand: " + brand + "Done")
 
 
 # <----------Master Code---------->
